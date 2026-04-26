@@ -6,6 +6,27 @@ __pycache__/
 # C extensions
 *.so
 
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+*.db
+*.sqlite3
+
+# Node / React
+node_modules/
+build/
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
 # Distribution / packaging
 .Python
 build/
