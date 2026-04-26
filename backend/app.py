@@ -2,9 +2,10 @@ from fastapi import FastAPI
 from database import Base, engine, SessionLocal
 from models import Holding
 from schemas import StockCreate
+from services.price_services import get_current_price
 from services.portfolio_service import compute_portfolio
 from fastapi.middleware.cors import CORSMiddleware
-from models import PortfolioHistory
+from models import PortfolioHistory , Alert
 from datetime import datetime, timedelta
 
 Base.metadata.create_all(bind=engine)
@@ -89,3 +90,52 @@ def get_history():
 
     db.close()
     return data
+
+@app.post("/add_alert/")
+def add_alert(ticker: str, target_price: float):
+    db = SessionLocal()
+
+    alert = Alert(ticker=ticker, target_price=target_price)
+
+    db.add(alert)
+    db.commit()
+    db.close()
+
+    return {"message": "alert added"}
+
+@app.get("/check_alerts/")
+def check_alerts():
+    db = SessionLocal()
+
+    alerts = db.query(Alert).all()
+    triggered = []
+
+    for a in alerts:
+        price = get_current_price(a.ticker)
+
+        if price and price >= a.target_price:
+            triggered.append({
+                "id": a.id,  # ADD THIS LINE - include the alert ID
+                "ticker": a.ticker,
+                "current_price": round(price, 2),
+                "target_price": a.target_price
+            })
+
+    db.close()
+    return triggered
+
+@app.delete("/clear_alert/{alert_id}")
+def clear_alert(alert_id: int):
+    db = SessionLocal()
+    
+    # Find the alert by ID
+    alert = db.query(Alert).filter(Alert.id == alert_id).first()
+    
+    if alert:
+        db.delete(alert)
+        db.commit()
+        db.close()
+        return {"message": f"Alert {alert_id} cleared successfully"}
+    else:
+        db.close()
+        return {"message": f"Alert {alert_id} not found"}, 404

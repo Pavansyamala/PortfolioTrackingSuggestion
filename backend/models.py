@@ -17,3 +17,10 @@ class PortfolioHistory(Base):
     id = Column(Integer, primary_key=True, index=True)
     total_value = Column(Float)
     timestamp = Column(String)
+
+class Alert(Base):
+    __tablename__ = "alerts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    ticker = Column(String)
+    target_price = Column(Float)
