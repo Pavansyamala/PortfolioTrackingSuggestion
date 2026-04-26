@@ -1,6 +1,4 @@
----
 
-```md
 # 📊 Portfolio Tracker App
 
 A full-stack portfolio tracking application that allows users to monitor their stock investments, analyze performance, and visualize portfolio insights.
