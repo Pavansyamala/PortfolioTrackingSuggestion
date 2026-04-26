@@ -177,19 +177,3 @@ This project was built as part of exploring:
 ## ⭐ Contribution
 
 Feel free to fork, improve, and experiment with the project.
-
-````
-
----
-
-# 🚀 After pasting
-
-Run:
-
-```bash
-git add README.md
-git commit -m "added README"
-git push
-````
-
----
