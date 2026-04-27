@@ -4,10 +4,12 @@ from database import Base
 class Holding(Base):
     __tablename__ = "holdings"
 
+    user_id = Column(Integer)
     id = Column(Integer, primary_key=True, index=True)
     ticker = Column(String)
     quantity = Column(Float)
     buy_price = Column(Float)
+
 
 
 # 🔥 NEW TABLE
@@ -24,3 +26,11 @@ class Alert(Base):
     id = Column(Integer, primary_key=True, index=True)
     ticker = Column(String)
     target_price = Column(Float)
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True)
+    password = Column(String)

@@ -31,6 +31,7 @@ function App() {
   const [alerts, setAlerts] = useState([]);
   const [alertTicker, setAlertTicker] = useState("");
   const [targetPrice, setTargetPrice] = useState("");
+  const [token, setToken] = useState("");
 
   useEffect(() => {
     fetchPortfolio();
@@ -39,7 +40,11 @@ function App() {
   }, []);
 
   const fetchPortfolio = async () => {
-    const res = await axios.get(`${API_BASE}/portfolio/`);
+    const res = await axios.get(`${API_BASE}/portfolio/`, {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+});
     setPortfolio(res.data);
   };
 
