@@ -13,7 +13,8 @@ import {
   CartesianGrid,
 } from "recharts";
 
-const API_BASE = "http://127.0.0.1:8000";  // will change later
+// const API_BASE = "http://127.0.0.1:8000";  // will change later
+const API_BASE = "https://portfolio-backend-5h6w.onrender.com";
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 function App() {
