@@ -7,26 +7,11 @@ from services.portfolio_service import compute_portfolio
 from fastapi.middleware.cors import CORSMiddleware
 from models import PortfolioHistory , Alert
 from datetime import datetime, timedelta
-from services.auth import hash_password, verify_password, create_token
-from models import User
-from fastapi import Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer
-from jose import jwt
+
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
-SECRET_KEY = "your_secret_key"
-ALGORITHM = "HS256"
-
-def get_current_user(token: str = Depends(oauth2_scheme)):
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username = payload.get("sub")
-        return username
-    except:
-        raise HTTPException(status_code=401, detail="Invalid token")
 
 app.add_middleware(
     CORSMiddleware,
@@ -35,38 +20,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-@app.post("/signup/")
-def signup(username: str, password: str):
-    db = SessionLocal()
-
-    user = User(
-        username=username,
-        password=hash_password(password)
-    )
-
-    db.add(user)
-    db.commit()
-    db.close()
-
-    return {"message": "user created"}
-
-@app.post("/login/")
-def login(username: str, password: str):
-    db = SessionLocal()
-
-    user = db.query(User).filter(User.username == username).first()
-
-    if not user or not verify_password(password, user.password):
-        return {"error": "invalid credentials"}
-
-    token = create_token({"sub": user.username})
-
-    db.close()
-    return {"access_token": token}
-
-
 
 
 @app.post("/add_stock/")
@@ -102,7 +55,7 @@ def delete_stock(stock_id: int):
 
 
 @app.get("/portfolio/")
-def get_portfolio(user: str = Depends(get_current_user)):
+def get_portfolio():
     db = SessionLocal()
     holdings = db.query(Holding).all()
 
